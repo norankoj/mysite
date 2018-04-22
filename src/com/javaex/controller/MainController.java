@@ -17,10 +17,11 @@ public class MainController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		request.setCharacterEncoding("UTF-8");
-		//���ο��� ��û�ؼ� �츰 �������� �Ѱ�����Ѵ�. redirect�� �� ��û.. �߸𸣰���
+		//시작시 메인페이지로 forword
 		Webutil.forword(request, response, "/WEB-INF/views/main/index.jsp");
 		
 	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);

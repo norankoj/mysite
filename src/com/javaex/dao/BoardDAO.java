@@ -168,7 +168,7 @@ public BoardVO getcontent(int no){
 		
 		
 		//쿼리전송
-		String sql = " SELECT no,title,content "
+		String sql = " SELECT no,title,content,user_no,hit "
 		            +" from board where no= ?";
 		
 		pstmt= con.prepareStatement(sql);
@@ -181,7 +181,8 @@ public BoardVO getcontent(int no){
 			vo.setNo(rs.getInt("no"));
 			vo.setTitle(rs.getString("title"));
 			vo.setContent(rs.getString("content"));
-			
+			vo.setUser_no(rs.getInt("user_no"));
+			vo.setHit(rs.getInt("hit"));
 		}			
 		
 			
@@ -272,4 +273,60 @@ public void update(BoardVO vo) {
 
 }
 
+
+public void updateHit(BoardVO vo) {
+
+	Connection con = null;
+	PreparedStatement pstmt = null;
+
+	int count;
+	try {
+
+		// 드라이버 로딩
+		String driver = "oracle.jdbc.OracleDriver";
+		Class.forName(driver);
+
+		// 접속
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		con = DriverManager.getConnection(url, "webdb", "webdb");
+
+		// 쿼리 전송
+		String sql = "UPDATE board SET hit=? WHERE no=?";
+		pstmt = con.prepareStatement(sql);
+
+		// 바인딩
+		pstmt.setInt(1, vo.getHit());
+		pstmt.setInt(2, vo.getNo());
+		
+
+		// 실행
+		count = pstmt.executeUpdate();
+
+		if (count > 0) {
+			System.out.println("count" + "조회수");
+		}
+
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} finally {
+
+		try {
+
+			if (pstmt != null) {
+				pstmt.close();
+			}
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
+			System.out.println("error" + e);
+		}
+
+	}
+
+}
 }

@@ -26,13 +26,17 @@ public class boardController extends HttpServlet {
 		
 		request.setCharacterEncoding("UTF-8");
 		String actionName = request.getParameter("a");
+		String page = request.getParameter("page");
 		
 		if("view".equals(actionName)) {
 			
 			int no = Integer.parseInt(request.getParameter("no"));
 			BoardDAO dao = new BoardDAO();
-			
+			//업데이트 하나 새로 생성, 히트 수만 올리는 
 			BoardVO vo = dao.getcontent(no);
+			System.out.println(vo.getHit());
+			vo.setHit(vo.getHit()+1);
+			dao.updateHit(vo);
 			request.setAttribute("vo", vo);
 			
 			Webutil.forword(request, response, "/WEB-INF/views/board/view.jsp");
@@ -82,11 +86,13 @@ public class boardController extends HttpServlet {
 			Webutil.redirect(request, response, "/mysite/board");
 		} 
 		else {
+			
 			BoardDAO dao = new BoardDAO();
 			ArrayList<BoardVO> list = dao.Select();
 			//HttpSession session = request.getSession();
 		    request.setAttribute("list", list);
 			Webutil.forword(request, response, "/WEB-INF/views/board/list.jsp");
+			
 		}
 	}
 

@@ -3,13 +3,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%
-	ArrayList<BoardVO> list = (ArrayList<BoardVO>) request.getAttribute("list");
-    UserVO authUser = (UserVO)session.getAttribute("authUser");
-
-	list = list == null ? null : list;
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -23,8 +18,9 @@
 <body>
 	<div id="container">
 
-		<jsp:include page="/WEB-INF/views/includes/header.jsp"></jsp:include>
-		<jsp:include page="/WEB-INF/views/includes/navigation.jsp"></jsp:include>
+		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
+         <c:import url="/WEB-INF/views/includes/navigation.jsp"></c:import>
+
 
 		<div id="content">
 			<div id="board">
@@ -41,28 +37,26 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>
-					<% 
-							for (BoardVO vo : list) {
-					%>
 
-					<tr>
-						<td><%=vo.getNo() %></td>
-						<td><a href="/mysite/board?a=view&no=<%=vo.getNo()%>"><%=vo.getTitle()%></a></td>
-						<td><%=vo.getName()%></td>
-						<td>3</td>
-						<td><%=vo.getReg_date()%></td>
-						<%
-			             if(authUser!=null){
-			             %>
-						<td><a href="" class="del">삭제</a></td>
-						<%
-			             }
-						%>
-					</tr>
-					<%
-						}
-						
-					%>
+					<c:forEach items="${list}" var="BoardVO" varStatus="status">
+
+						<tr>
+							<td>${BoardVO.no}</td>
+							<td><a href="/mysite/board?a=view&no=${BoardVO.no}">${BoardVO.title}</a></td>
+							<td>${BoardVO.name}</td>
+							<td>${BoardVO.hit}</td>
+							<td>${BoardVO.reg_date}</td>
+
+							<c:choose>
+								<c:when test="${empty authUser}"></c:when>
+								<c:when test="${authUser.no==vo.user_no}">
+									<td><a href="" class="del">삭제</a>
+									<td>
+								</c:when>
+						</c:choose>
+						</tr>
+					</c:forEach>
+
 				</table>
 				<div class="pager">
 					<ul>
@@ -76,23 +70,20 @@
 					</ul>
 				</div>
 				<div class="bottom">
-				
-			           <%
-			    if(authUser!=null){
-			
-			%>
-					<a href="/mysite/board?a=write" id="new-book">글쓰기</a>
-						
-			<%
-			    }
-			
-			%>	
+
+
+					<c:choose>
+						<c:when test="${authUser != null}">
+							<a href="/mysite/board?a=write" id="new-book">글쓰기</a>
+
+						</c:when>
+					</c:choose>
+
 				</div>
 			</div>
 		</div>
 
-		<jsp:include page="/WEB-INF/views/includes/footer.jsp"></jsp:include>
-
+		<c:import url="/WEB-INF/views/includes/footer.jsp"></c:import>
 	</div>
 </body>
 </html>

@@ -2,13 +2,8 @@
 <%@page import="com.javaex.vo.GuestbookVO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%
-ArrayList<GuestbookVO> list = (ArrayList<GuestbookVO>)request.getAttribute("list");
-list = list==null? null:list;
-
-UserVO authUser = (UserVO)session.getAttribute("authUser");
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -21,9 +16,8 @@ UserVO authUser = (UserVO)session.getAttribute("authUser");
 
 	<div id="container">
 		
-		 <jsp:include page="/WEB-INF/views/includes/header.jsp"></jsp:include>
-		    <jsp:include page="/WEB-INF/views/includes/navigation.jsp"></jsp:include>
-		
+		 <c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
+         <c:import url="/WEB-INF/views/includes/navigation.jsp"></c:import>
 		<div id="wrapper">
 			<div id="content">
 				<div id="guestbook">
@@ -44,53 +38,42 @@ UserVO authUser = (UserVO)session.getAttribute("authUser");
 						</table>
 					</form>
 					<ul>
-					 <%
-                        if(list==null){
-    	                        list=null;
-                        }else{
-	                            for(GuestbookVO vo:list){
-	                   %>
+					 
+				
+	                            <c:forEach items="${list}" var="GuestbookVO" varStatus="status">
+	                  
 						<li>
 							<table>
 								<tr>
-									<td><%=vo.getNo()%></td>
-									<td><%=vo.getName() %></td>
-									<td><%=vo.getReg_date() %></td>
-									<%
-									  if(authUser==null){
-										  
-									  }else{
-									%>
-									
-									<td><a href="/mysite/guest?a=deleteform&no=<%=vo.getNo()%>">삭제</a></td>
-								<%
-									  }
-								
-								%>
+									<td>${GuestbookVO.no }</td>
+									<td>${GuestbookVO.name }</td>
+									<td>${GuestbookVO.reg_date }</td>
+									<c:choose>
+								<c:when test="${authUser != null}">
+									<td><a href="/mysite/guest?a=deleteform&no=${GuestbookVO.no}">삭제</a></td>									
+								</c:when>
+						</c:choose>
 								
 								</tr>
 								<tr>
 									<td colspan=4>
-									<%=vo.getContent() %><br>
+									${GuestbookVO.content }<br>
 									
 									</td>
 								</tr>
 							</table>
 							<br>
 						</li>
-						<%
-	                            }
-							
-                        }
-						%>
+						</c:forEach>
+					
+						
 					</ul>
 					
 				</div><!-- /guestbook -->
 			</div><!-- /content -->
 		</div><!-- /wrapper -->
 		
-		<jsp:include page="/WEB-INF/views/includes/footer.jsp"></jsp:include>
-		
+<c:import url="/WEB-INF/views/includes/footer.jsp"></c:import>		
 	</div> <!-- /container -->
 
 </body>

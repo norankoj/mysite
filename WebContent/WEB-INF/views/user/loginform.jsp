@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <%
 
 String result = request.getParameter("result");
@@ -16,8 +18,8 @@ String result = request.getParameter("result");
 
 	<div id="container">
 		
-		<jsp:include page="/WEB-INF/views/includes/header.jsp"></jsp:include>
-				<jsp:include page="/WEB-INF/views/includes/navigation.jsp"></jsp:include>
+		 <c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
+         <c:import url="/WEB-INF/views/includes/navigation.jsp"></c:import>
 		
 
 		<div id="wrapper">
@@ -33,13 +35,11 @@ String result = request.getParameter("result");
 						<label class="block-label">패스워드</label> 
 						<input name="password" type="password" value="">
 						
-								<%
-								   if("fail".equals(result)){
-								%>
+						<c:choose>
+						<c:when test="${'fail' eq param.result }">
 								<P>로그인이 실패했습니다. 다시입력해주세요</P>
-						        <%
-								   }
-						        %>
+						</c:when>
+						</c:choose>
 	
 						<input type="submit" value="로그인">
 					</form>
@@ -48,7 +48,7 @@ String result = request.getParameter("result");
 			</div><!-- /content -->
 		</div><!-- /wrapper -->
 		
-	<jsp:include page="/WEB-INF/views/includes/footer.jsp"></jsp:include>
+<c:import url="/WEB-INF/views/includes/footer.jsp"></c:import>
 	</div> <!-- /container -->
 
 
